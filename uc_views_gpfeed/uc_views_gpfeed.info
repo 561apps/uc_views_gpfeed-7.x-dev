@@ -1,0 +1,15 @@
+name = Google products feed for Ubercart
+description = "Plugin to export views data into google product feeds"
+dependencies[] = views_data_export
+dependencies[] = uc_store
+dependencies[] = uc_product
+package = Ubercart - extra
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2011-12-06
+version = "6.x-1.0"
+core = "6.x"
+project = "uc_views_gpfeed"
+datestamp = "1323184846"
+

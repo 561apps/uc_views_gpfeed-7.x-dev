@@ -1,0 +1,80 @@
+<?php
+
+function uc_views_gpfeed_schema() {
+  $schema['uc_views_gpfeed'] = array(
+    // example (partial) specification for table "node"
+    'description' => 'Mapping of taxonomy terms with google taxonomies.',
+    'fields' => array(
+      'tid' => array(
+        'description' => 'The primary identifier for a term.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'vid' => array(
+        'description' => 'The vocabulary the term belongs to.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'google_taxonomy' => array(
+        'description' => 'The google\'s taxonomy.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'weight' => array(
+        'description' => 'Weight of the element. Lighter weights are higher up, heavier weights go down. This is used to choose taxonomy defaults when multiple',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0
+      ),
+    ),
+    'primary key' => array('tid'),
+  );
+
+  $schema['uc_views_gpfeed_google_taxonomy'] = array(
+    // example (partial) specification for table "node"
+    'description' => 'List of google taxonomy terms.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'Just an id for the taxonomy.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'google_taxonomy' => array(
+        'description' => 'The google\'s taxonomy.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function uc_views_gpfeed_install() {
+  // Create tables.
+  drupal_install_schema('uc_views_gpfeed');
+  module_load_include('module', 'uc_views_gpfeed');
+  $taxonomy_file = variable_get('google_taxonomy_file_path', drupal_get_path('module', 'uc_views_gpfeed') . '/taxonomy.en-GB.txt');
+  uc_views_gpfeed_google_taxonomy_import($taxonomy_file);
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function uc_views_gpfeed_uninstall() {
+  // Remove tables.
+  drupal_uninstall_schema('uc_views_gpfeed');
+}
+
